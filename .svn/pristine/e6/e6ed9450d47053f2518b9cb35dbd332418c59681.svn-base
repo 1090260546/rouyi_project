@@ -1,0 +1,14 @@
+package com.ruoyi.outbound.service;
+
+import com.ruoyi.outbound.entity.User;
+
+public interface UserService {
+
+
+
+    void updateUser(String phone, String province, String city, String content, String carrierCode);
+
+
+    User saveUser(String phone,String province,String city,String content,String carrierCode);
+
+}

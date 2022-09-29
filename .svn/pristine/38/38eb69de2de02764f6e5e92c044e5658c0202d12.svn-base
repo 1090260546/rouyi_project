@@ -1,0 +1,61 @@
+package com.ruoyi.outbound.domain;
+
+import com.baomidou.mybatisplus.annotation.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import java.io.Serializable;
+import java.util.Date;
+import java.math.BigDecimal;
+
+import com.ruoyi.common.core.domain.BaseEntity;
+
+/**
+ * 机器人信息对象 ob_business
+ *
+ * @author ruoyi
+ * @date 2022-09-21
+ */
+@Data
+@TableName("aisp_saas.business")
+public class ObBusiness{
+
+    private static final long serialVersionUID=1L;
+
+    /**
+     *
+     */
+    private Long id;
+    /**
+     * 机器人编号
+     */
+    @TableField("bizNo")
+    private Long bizNo;
+    /**
+     * 机器人名称
+     */
+    @TableField("bizName")
+    private String bizName;
+    /**
+     * 业务描述
+     */
+    private String desc;
+    /**
+     * 创建人ID
+     */
+    @TableField("createUserId")
+    private Long createUserId;
+    /**
+     * 创建人
+     */
+    @TableField("createUser")
+    private String createUser;
+    /**
+     * 状态描述
+     */
+    @TableField("statusDesc")
+    private String statusDesc;
+
+    @TableField("createTime")
+    private String createTime;
+
+}

@@ -1,0 +1,49 @@
+package com.ruoyi.outbound.domain.bo;
+
+import com.ruoyi.common.core.validate.AddGroup;
+import com.ruoyi.common.core.validate.EditGroup;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import javax.validation.constraints.*;
+
+import java.util.Date;
+
+import com.ruoyi.common.core.domain.BaseEntity;
+
+/**
+ * 【请填写功能名称】业务对象 export_template_detail
+ *
+ * @author ruoyi
+ * @date 2022-09-19
+ */
+
+@Data
+@EqualsAndHashCode(callSuper = true)
+public class ExportTemplateDetailBo extends BaseEntity {
+
+    /**
+     * 主键ID
+     */
+    @NotNull(message = "主键ID不能为空", groups = { EditGroup.class })
+    private Long id;
+
+    /**
+     * 导出表id
+     */
+    @NotNull(message = "导出表id不能为空", groups = { AddGroup.class, EditGroup.class })
+    private Long exportId;
+
+    /**
+     * 标签id
+     */
+    @NotNull(message = "标签id不能为空", groups = { AddGroup.class, EditGroup.class })
+    private Long itemId;
+
+    /**
+     * 是否删除（1：是，0：否）
+     */
+    @NotNull(message = "是否删除（1：是，0：否）不能为空", groups = { AddGroup.class, EditGroup.class })
+    private Integer isDelete;
+
+
+}

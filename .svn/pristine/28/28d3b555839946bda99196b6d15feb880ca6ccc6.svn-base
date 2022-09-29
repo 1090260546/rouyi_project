@@ -1,0 +1,111 @@
+package com.ruoyi.outbound.service.impl;
+
+import cn.hutool.core.bean.BeanUtil;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.core.domain.PageQuery;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.ruoyi.outbound.domain.ExportTemplateDetail;
+import com.ruoyi.outbound.domain.bo.ExportTemplateDetailBo;
+import com.ruoyi.outbound.domain.vo.ExportTemplateDetailVo;
+import com.ruoyi.outbound.mapper.ExportTemplateDetailMapper;
+import com.ruoyi.outbound.service.IExportTemplateDetailService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Collection;
+
+/**
+ * 【请填写功能名称】Service业务层处理
+ *
+ * @author ruoyi
+ * @date 2022-09-19
+ */
+@RequiredArgsConstructor
+@Service
+public class ExportTemplateDetailServiceImpl implements IExportTemplateDetailService {
+
+    private final ExportTemplateDetailMapper baseMapper;
+
+    /**
+     * 查询【请填写功能名称】
+     */
+    @Override
+    public ExportTemplateDetailVo queryById(Long id){
+        return baseMapper.selectVoById(id);
+    }
+
+    /**
+     * 查询【请填写功能名称】列表
+     */
+    @Override
+    public TableDataInfo<ExportTemplateDetailVo> queryPageList(ExportTemplateDetailBo bo, PageQuery pageQuery) {
+        LambdaQueryWrapper<ExportTemplateDetail> lqw = buildQueryWrapper(bo);
+        Page<ExportTemplateDetailVo> result = baseMapper.selectVoPage(pageQuery.build(), lqw);
+        return TableDataInfo.build(result);
+    }
+
+    /**
+     * 查询【请填写功能名称】列表
+     */
+    @Override
+    public List<ExportTemplateDetailVo> queryList(ExportTemplateDetailBo bo) {
+        LambdaQueryWrapper<ExportTemplateDetail> lqw = buildQueryWrapper(bo);
+        return baseMapper.selectVoList(lqw);
+    }
+
+    private LambdaQueryWrapper<ExportTemplateDetail> buildQueryWrapper(ExportTemplateDetailBo bo) {
+        Map<String, Object> params = bo.getParams();
+        LambdaQueryWrapper<ExportTemplateDetail> lqw = Wrappers.lambdaQuery();
+        lqw.eq(bo.getExportId() != null, ExportTemplateDetail::getExportId, bo.getExportId());
+        lqw.eq(bo.getItemId() != null, ExportTemplateDetail::getItemId, bo.getItemId());
+        lqw.eq(bo.getIsDelete() != null, ExportTemplateDetail::getIsDelete, bo.getIsDelete());
+        return lqw;
+    }
+
+    /**
+     * 新增【请填写功能名称】
+     */
+    @Override
+    public Boolean insertByBo(ExportTemplateDetailBo bo) {
+        ExportTemplateDetail add = BeanUtil.toBean(bo, ExportTemplateDetail.class);
+        validEntityBeforeSave(add);
+        boolean flag = baseMapper.insert(add) > 0;
+        if (flag) {
+            bo.setId(add.getId());
+        }
+        return flag;
+    }
+
+    /**
+     * 修改【请填写功能名称】
+     */
+    @Override
+    public Boolean updateByBo(ExportTemplateDetailBo bo) {
+        ExportTemplateDetail update = BeanUtil.toBean(bo, ExportTemplateDetail.class);
+        validEntityBeforeSave(update);
+        return baseMapper.updateById(update) > 0;
+    }
+
+    /**
+     * 保存前的数据校验
+     */
+    private void validEntityBeforeSave(ExportTemplateDetail entity){
+        //TODO 做一些数据校验,如唯一约束
+    }
+
+    /**
+     * 批量删除【请填写功能名称】
+     */
+    @Override
+    public Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid) {
+        if(isValid){
+            //TODO 做一些业务上的校验,判断是否需要校验
+        }
+        return baseMapper.deleteBatchIds(ids) > 0;
+    }
+}

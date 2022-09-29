@@ -1,0 +1,87 @@
+package com.ruoyi.outbound.mapper;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.ruoyi.outbound.entity.dto.BatchDetailInfoDto;
+import com.ruoyi.outbound.entity.dto.BatchInfoDto;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
+
+@Mapper
+public interface BatchInfoMapper extends BaseMapper<BatchInfoDto> {
+    @Select(" SELECT\n" +
+            "            t1.id taskId,\n" +
+            "            t1.BatchName,\n" +
+            "            t1.BatchInfoDesc,\n" +
+            "            t1.BeginDate,\n" +
+            "            t1.EndDate,\n" +
+            "            t1.TimePhase,\n" +
+            "            t1.ResPhoneNum,\n" +
+            "            t1.ResSubmitNum,\n" +
+            "            t1.RetSuccNum,\n" +
+            "            t1.RetFailNum,\n" +
+            "            t1.RetOutDateNum,\n" +
+            "            t1.SvcTime,\n" +
+            "            t2.TaskName,\n" +
+            "            t2.BusinessId,\n" +
+            "            t2.BusinessName,\n" +
+            "            t3.BizNo\n" +
+            "        FROM\n" +
+            "            aisp_saas.marketbatchinfo t1\n" +
+            "                LEFT JOIN aisp_saas.markettaskinfo t2 ON t1.TaskId = t2.Id\n" +
+            "                left join aisp_saas.business t3 on t2.BusinessId = t3.Id\n" +
+            "        ORDER BY\n" +
+            "            t1.CreateTime DESC")
+    List<BatchInfoDto> selectBatchInfoList();
+
+    @Select("  SELECT\n" +
+            "            *\n" +
+            "        FROM\n" +
+            "            aisp_saas.marketbatchdetails t1\n" +
+            "                LEFT JOIN aisp_jydp.logusersessioninfo t2 ON t1.TransactionId = t2.Sid\n" +
+            "        where t1.BatchId = #{batchId}")
+    List<BatchDetailInfoDto> selectBatchDetailList(Long batchId);
+    @Select("select count(t1.id) from aisp_saas.marketbatchdetails t1 where t1.BatchId = #{batchId}")
+    long countBatchDetail(@Param("batchId")long batchId);
+    @Select(" SELECT\n" +
+            "            PhoneNo\n" +
+            "        FROM\n" +
+            "            aisp_saas.marketbatchdetails t1\n" +
+            "        where t1.BatchId = #{batchId} and t1.Status = 3")
+    List<String> selectSuccessPhoneNo(@Param("batchId") long batchId);
+
+    @Select(" <script>SELECT\n" +
+            "        t1.PhoneNo,\n" +
+            "        t1.Province,\n" +
+            "        t1.City,\n" +
+            "        t1.Reason,\n" +
+            "        t1.WavUrl,\n" +
+            "        t1.CallTime,\n" +
+            "        t1.BeginTime,\n" +
+            "        t1.ElapsedTime,\n" +
+            "        t1.CurrentCallTime,\n" +
+            "        t2.Label,\n" +
+            "        t1.content,\n"+
+            "        t1.STATUS\n" +
+            "        FROM\n" +
+            "        aisp_saas.marketbatchdetails t1\n" +
+            "        LEFT JOIN aisp_jydp.logusersessioninfo t2 ON t1.TransactionId = t2.Sid\n" +
+            "        WHERE\n" +
+            "        1 = 1 and t1.BatchId = #{batchId} and t1.PhoneNo in\n" +
+            "        <foreach collection=\"phones\" item=\"phone\" index=\"index\" open=\"(\" close=\")\" separator=\",\">\n" +
+            "            #{phone}\n" +
+            "        </foreach>" +
+            "</script>")
+    List<BatchDetailInfoDto> selectDetailsByPhones(@Param("phones") List<String> phones, @Param("batchId")long batchId );
+
+    @Select("SELECT\n" +
+            " t1.Desc  \n" +
+            "FROM\n" +
+            " aisp_jydp.configlabelcategory t1\n" +
+            " LEFT JOIN flowversion t2 ON t1.VersionId = t2.Id\n" +
+            " left JOIN robot t3 ON t2.robotId = t3.Id\n" +
+            " where t3.Id = #{robotId};")
+    List<String> selectConfigLabelCategory(@Param("robotId") long robotId);
+}

@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c5eec00f-c000-4240-aaed-d2eee0561743" name="Changes" comment="大白外呼">
+      <change afterPath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/controller/ImportController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/entity/SysUser.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/entity/TaskUserTag.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/entity/User.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/mapper/TaskUserTagMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/mapper/UserMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/service/ImportService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/service/impl/ImportServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/utils/CheckFileTypeUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/utils/ExcelAnnotation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/utils/ImportExcel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/utils/ReflectUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/resources/mapper" afterDir="true" />
+      <change afterPath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/resources/mapper/outbound" afterDir="true" />
+      <change afterPath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/resources/mapper/outbound/SendMessageLogMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/resources/mapper/package-info.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/ruoyi-xxl-job-admin.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/ruoyi-xxl-job-admin.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/sys-console.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/sys-console.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/sys-error.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/sys-error.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/sys-info.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/sys-info.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ruoyi-admin/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ruoyi-admin/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ruoyi-admin/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/ruoyi-admin/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ruoyi-zhhn-outbound/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ruoyi-zhhn-outbound/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/controller/MessageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/controller/MessageController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/controller/RegionInfoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/controller/RegionInfoController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/controller/vo/ImportVo.java" beforeDir="false" afterPath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/controller/vo/ImportVo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/entity/dto/BatchDetailInfoDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/entity/dto/BatchDetailInfoDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/entity/dto/BatchInfoDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/entity/dto/BatchInfoDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/mapper/BatchInfoMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/mapper/RegionInfoMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/mapper/SendMessageLogMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/mapper/TaskMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/mapper/TaskResultMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/service/BatchInfoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/service/BatchInfoService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/service/ISendMessageLogService.java" beforeDir="false" afterPath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/service/ISendMessageLogService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/service/RegionInfoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/service/RegionInfoService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/service/impl/BatchInfoServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/service/impl/BatchInfoServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/service/impl/RegionInfoServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/service/impl/RegionInfoServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/service/impl/SendMessageLogServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/service/impl/SendMessageLogServiceImpl.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="$PROJECT_DIR$/../../maven/apache-maven-3.3.9" />
+        <option name="useMavenConfig" value="true" />
+        <option name="userSettingsFile" value="D:\Program Files\maven\apache-maven-3.3.9\conf\settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="2E0bl3EJpckLCPecHEuW3Iumbsf" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RequestMappingsPanelOrder0" value="0" />
+    <property name="RequestMappingsPanelOrder1" value="1" />
+    <property name="RequestMappingsPanelWidth0" value="75" />
+    <property name="RequestMappingsPanelWidth1" value="75" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/ruoyi-zhhn-outbound/src/main/java/com/ruoyi/outbound/utils" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.47356322" />
+    <property name="settings.editor.selected.configurable" value="MavenSettings" />
+  </component>
+  <component name="ReactorSettings">
+    <option name="notificationShown" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Program Files\IdeaProjects\RuoYi-Vue-Plus\ruoyi-zhhn-outbound\src\main\java\com\ruoyi\outbound\utils" />
+      <recent name="D:\Program Files\IdeaProjects\RuoYi-Vue-Plus\ruoyi-zhhn-outbound\src\main\resources\mapper\outbound" />
+      <recent name="D:\Program Files\IdeaProjects\RuoYi-Vue-Plus\ruoyi-zhhn-outbound\src\main\resources\mapper" />
+      <recent name="D:\Program Files\IdeaProjects\RuoYi-Vue-Plus\ruoyi-zhhn-outbound\src\main\java\com\ruoyi\outbound\service\impl" />
+      <recent name="D:\Program Files\IdeaProjects\RuoYi-Vue-Plus\ruoyi-zhhn-outbound\src\main\java\com\ruoyi\outbound\service" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Program Files\IdeaProjects\RuoYi-Vue-Plus\ruoyi-zhhn-outbound\src\main\resources\mapper\outbound" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.ruoyi.outbound.utils" />
+      <recent name="com.ruoyi.outbound.controller" />
+      <recent name="com.ruoyi.web.core.config" />
+      <recent name="com.ruoyi.generator.util" />
+      <recent name="com.ruoyi.outbound.job" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="configurationTypes">
+      <set>
+        <option value="Application" />
+        <option value="MavenRunConfiguration" />
+        <option value="SpringBootApplicationConfigurationType" />
+      </set>
+    </option>
+  </component>
+  <component name="RunManager" selected="Spring Boot.RuoYiApplication">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="ruoyi-vue-plus" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="ruoyi-vue-plus" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MonitorAdminApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="ruoyi-monitor-admin" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.ruoyi.monitor.admin.MonitorAdminApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RuoYiApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="ruoyi-admin" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.ruoyi.RuoYiApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="XxlJobAdminApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="ruoyi-xxl-job-admin" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.xxl.job.admin.XxlJobAdminApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Spring Boot.MonitorAdminApplication" />
+      <item itemvalue="Spring Boot.XxlJobAdminApplication" />
+      <item itemvalue="Spring Boot.RuoYiApplication" />
+    </list>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SpringBootOptions">
+    <option name="showAdditionalConfigNotification" value="false" />
+  </component>
+  <component name="SvnConfiguration" cleanupOnStartRun="true">
+    <configuration>C:\Users\rongbo\AppData\Roaming\Subversion</configuration>
+    <supportedVersion>125</supportedVersion>
+  </component>
+  <component name="SvnFileUrlMappingImpl">
+    <option name="myMappingRoots">
+      <list>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="D:\Program Files\IdeaProjects\RuoYi-Vue-Plus" />
+          <option name="myCopyRoot" value="D:\Program Files\IdeaProjects\RuoYi-Vue-Plus" />
+        </SvnCopyRootSimple>
+      </list>
+    </option>
+    <option name="myMoreRealMappingRoots">
+      <list>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="D:\Program Files\IdeaProjects\RuoYi-Vue-Plus" />
+          <option name="myCopyRoot" value="D:\Program Files\IdeaProjects\RuoYi-Vue-Plus" />
+        </SvnCopyRootSimple>
+      </list>
+    </option>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c5eec00f-c000-4240-aaed-d2eee0561743" name="Changes" comment="" />
+      <created>1661735598088</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1661735598088</updated>
+      <workItem from="1661735599860" duration="5919000" />
+      <workItem from="1661741885835" duration="9000" />
+      <workItem from="1661741908310" duration="7263000" />
+      <workItem from="1661759304768" duration="243000" />
+      <workItem from="1661760725408" duration="8791000" />
+      <workItem from="1661774076621" duration="4347000" />
+      <workItem from="1661796467091" duration="1659000" />
+      <workItem from="1661821445026" duration="11622000" />
+      <workItem from="1661835425999" duration="205000" />
+      <workItem from="1661835645048" duration="1173000" />
+      <workItem from="1661836834559" duration="6851000" />
+      <workItem from="1661846605038" duration="3558000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="dependencySupport" implementationName="java:com.amazonaws:aws-java-sdk-core" />
+    <option featureType="dependencySupport" implementationName="java:com.amazonaws:aws-java-sdk-s3" />
+    <option featureType="com.intellij.fileTypeFactory" implementationName="application.yml" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="大白外呼" />
+    <option name="LAST_COMMIT_MESSAGE" value="大白外呼" />
+  </component>
+</project>

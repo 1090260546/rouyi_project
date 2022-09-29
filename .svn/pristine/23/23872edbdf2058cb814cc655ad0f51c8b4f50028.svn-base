@@ -1,0 +1,413 @@
+package com.ruoyi.outbound.service.impl;
+
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.ruoyi.outbound.controller.vo.ImportVo;
+import com.ruoyi.outbound.entity.*;
+import com.ruoyi.outbound.entity.dto.BatchDetailInfoDto;
+import com.ruoyi.outbound.entity.dto.BatchInfoDto;
+import com.ruoyi.outbound.mapper.*;
+import com.ruoyi.outbound.service.BatchInfoService;
+import com.ruoyi.outbound.service.ImportService;
+import com.ruoyi.outbound.service.MessageService;
+import com.ruoyi.outbound.service.RegionInfoService;
+import com.ruoyi.outbound.utils.ImportExcel;
+
+import com.xxl.job.core.handler.annotation.XxlJob;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+@Service
+public class ImportServiceImpl implements ImportService {
+
+    private static Logger logger = LoggerFactory.getLogger(ImportServiceImpl.class);
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
+    private TaskResultMapper taskResultMapper;
+
+    @Autowired
+    private TaskMapper taskMapper;
+
+    @Autowired
+    private ImportExcel importExcel;
+
+    @Autowired
+    private BatchInfoService batchInfoService;
+
+    @Autowired
+    private SqlSessionFactory sqlSessionFactory;
+
+    @Autowired
+    private MessageService messageService;
+
+    @Autowired
+    private SendMessageLogMapper sendMessageLogMapper;
+
+    @Autowired
+    private RegionInfoService regionInfoService;
+
+    @Autowired
+    private TaskUserTagMapper taskUserTagMapper;
+
+    static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日");
+
+    static SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS");
+
+
+    private static  String msgContent = "为了您和家人的安全，请您尽快到就近的核酸检测采样点进行核酸采样。请做好个人防护，感谢您的配合。谢谢！";
+
+
+
+//    @DS("master")
+    @Override
+    @Transactional
+    public boolean importExcel(MultipartFile importFile, Map<Integer, String> errorMap, List<ImportVo> errors, Integer regionId) throws Exception {
+        File file = importExcel.transferToFile(importFile);
+        Workbook book = importExcel.getWorkbook(file);
+        if(book == null){
+            return  false;
+        }
+        long taskId  = saveTask(book.getSheetAt(0),regionId);
+        for(int i =1; i<=book.getNumberOfSheets()-1; i++){
+            Sheet sheet = book.getSheetAt(i);
+
+            List<ImportVo> importVoList =  importExcel.readExcel(ImportVo.class,sheet,i,errorMap,errors);
+            if(errors != null && !errors.isEmpty()){
+                throw new RuntimeException("导入失败"); //导入失败抛出异常回滚事务
+            }
+            for(ImportVo importVo : importVoList){
+                User user =  saveUser(importVo.getPhone(),importVo.getProvince(),importVo.getCity(),"");
+                TaskResult taskResult = new TaskResult();
+                taskResult.setUserId(user.getId());
+                taskResult.setUserTag(sheet.getSheetName().trim());
+                taskResult.setCreateTime(new Date());
+                taskResult.setTaskId(taskId);
+                BeanUtils.copyProperties(importVo,taskResult,TaskResult.class);
+                taskResultMapper.insert(taskResult);
+            }
+        }
+        return true;
+    }
+
+
+    private User saveUser(String phone,String province,String city,String content){
+        List<User> userList = userMapper.selectList(new QueryWrapper<User>().eq("phone",phone));
+        User user =null;
+        if(null != userList && !userList.isEmpty()){
+            user = userList.get(0);
+            if(!StringUtils.isEmpty(content)&& StringUtils.isEmpty(user.getAddress()) && StringUtils.isEmpty(user.getName())){
+                JSONObject jsonObject = JSONObject.parseObject(content);
+                user.setName(jsonObject.getString("姓名"));
+                user.setAddress(jsonObject.getString("住址"));
+                userMapper.updateById(user);
+            }
+        }else{
+            user = new User();
+            user.setPhone(phone);
+            user.setCreateTime(new Date());
+            user.setIsDelete(0);
+            if(!StringUtils.isEmpty(content)){
+                JSONObject jsonObject = JSONObject.parseObject(content);
+                user.setName(jsonObject.getString("姓名"));
+                user.setAddress(jsonObject.getString("住址"));
+            }
+            userMapper.insert(user);
+        }
+        return user;
+    }
+
+
+//    @DS("master")
+    @Override
+    public long saveTask(Sheet sheet,Integer regionId) throws ParseException {
+        Task task = null;
+        task = taskMapper.selectOne(new QueryWrapper<Task>().eq("name",sheet.getSheetName()));
+        if(!ObjectUtils.isEmpty(task)){
+            task = new Task();
+            return task.getId();
+        }
+        task = new Task();
+        task.setName(sheet.getSheetName());
+        Row oneRow = sheet.getRow(1);
+        Cell cell = oneRow.getCell(1);
+        String title = cell.getStringCellValue();
+        String [] titleArr = title.split("：");
+        String taskNo = titleArr[1];
+        task.setTaskNo(taskNo);
+        Row fourRow = sheet.getRow(1);
+        cell = fourRow.getCell(1);
+        task.setTaskDate(dateFormat.parse(cell.getStringCellValue()));
+        cell = fourRow.getCell(4);
+        task.setContent(cell.getStringCellValue());
+        task.setCreateTime(new Date());
+        task.setIsDelete(0);
+        task.setStatus(0);
+        task.setRegionId(regionId);
+        taskMapper.insert(task);
+        return task.getId();
+    }
+
+    @XxlJob("getBatchInfoJob")
+    public void getBatchInfoList(){
+        try{
+            List<BatchInfoDto> batchInfoDtoList = batchInfoService.selectBatchInfoList();
+            for(BatchInfoDto batch : batchInfoDtoList){
+                long count = taskMapper.countByBatchId(batch.getTaskId()); //查询是否同步批次任务
+                List<String> labels = batchInfoService.selectConfigLabelCategory(batch.getBusinessId());
+                if(count<=0){ //未同步则开始同步
+                    //保存任务
+                    Task task = new Task();
+                    taskMapper.insert(convertTOTask(task,batch));//保存任务信息
+                    asyncSaveTask(task.getId(),batch.getTaskId(),batch); //异步同步任务数据
+
+                    batchInsertUserTag(labels,task.getId());
+                }else{ //已同步，或同步中状态
+                    List<Task> taskList = taskMapper.selectByBatchIdAndStatusTaskList(batch.getTaskId(),2); //查询同步中或未同步的批次任务
+                    if(CollectionUtils.isEmpty(taskList)) {
+                        continue;
+                    }
+                    Task task = taskList.get(0);
+                    if(taskUserTagMapper.countByTaskId(task.getId())>=1){
+                        batchInsertUserTag(labels,task.getId());
+                    }
+                    long taskCount = taskResultMapper.countTaskResultByTaskId(task.getId()); //获取已同步号码数量
+                    long batchDetailCount = batchInfoService.countBatchDetail(batch.getTaskId());//获取总号码数量
+                    if(taskCount!= batchDetailCount){ //判断本地库是否与外呼库数据是否相同
+                        asyncSaveTask(task.getId(),batch.getTaskId(),batch); //数量不相同则异步同步任务数据
+                    } else {
+                        task.setStatus(2);
+                        taskMapper.updateById(task); //把任务状态修改为已同步
+                    }
+                }
+            }
+            logger.info("{}任务同步完成"+dateFormat1.format(new Date()));
+        }catch (Exception exception){
+            exception.printStackTrace();
+        }
+    }
+
+    //异步处理任务
+    @Async
+    public void asyncSaveTask(long taskId,long batchId,BatchInfoDto batchInfoDto ){
+        long start = System.currentTimeMillis();
+        Task task = new Task();
+        task.setId(taskId);
+        task.setStatus(1);
+        taskMapper.updateById(task); //把任务状态修改为同步中
+        List<String> successPhoneNoList =batchInfoService.selectSuccessPhoneNo(batchId); //获取呼叫成功的手机号码
+        List<String> phoneList = taskResultMapper.selectPhoneNo(taskId); //获取已同步的数据
+        List<String> resultList = getDiffrent(successPhoneNoList,phoneList); //获取未同步的数据
+        if(CollectionUtils.isEmpty(resultList)){
+            return;
+        }
+        int round = 0;
+        if(resultList.size()<=500){
+            round = 0;
+        }else{
+            // 获取执行的轮次
+             round = (resultList.size() - 1) / 500;
+        }
+        for(int i = 0; i <= round; i++){
+            // 求每一个批次起始位置
+            int fromIndex = i * 500;
+            int toIndex = (i + 1) * 500;
+            // 若是是最后一个批次，则不能越界
+            if (i == round){
+                toIndex = resultList.size();
+            }
+            String suffix = batchInfoDto.getBatchInfoDesc().substring(0,batchInfoDto.getBatchInfoDesc().length()-1);
+            String msgContents = msgContent+suffix+"疫情防控。";
+            List<String> subList = resultList.subList(fromIndex, toIndex);
+            System.out.println("轮次：" + i);
+            List<BatchDetailInfoDto> batchDetailInfoDtoList = batchInfoService.selectDetailsByPhones(subList,batchId);
+            List<TaskResult> taskResults = new ArrayList<>();
+            List<SendMessageLog> sendMessageLogList = new ArrayList<>();
+            for(BatchDetailInfoDto batchDetailInfoDto : batchDetailInfoDtoList){
+                User user = saveUser(batchDetailInfoDto.getPhoneNo(),batchDetailInfoDto.getProvince(),batchDetailInfoDto.getCity(),batchDetailInfoDto.getContent()); //获取用户
+                if(batchDetailInfoDto.getStatus() == 3){
+                    taskResults.add(convertTOTaskResult(taskId, user.getId (), batchDetailInfoDto.getLabel(), batchDetailInfoDto));
+                    sendMessageLogList.add(convertTOSendMessageLog(taskId, user.getId(), user.getPhone(), msgContents));
+                }else if(batchDetailInfoDto.getStatus() == 4){
+                    taskResults.add(convertTOTaskResult( taskId, user.getId(), "未接外呼", batchDetailInfoDto));
+                    sendMessageLogList.add(convertTOSendMessageLog(taskId, user.getId(), user.getPhone(), msgContents));
+                }else if(batchDetailInfoDto.getStatus() == 9){
+                    taskResults.add(convertTOTaskResult( taskId, user.getId(), "异常号码", batchDetailInfoDto));
+                    sendMessageLogList.add(convertTOSendMessageLog(taskId, user.getId(), user.getPhone(), msgContents));
+                }
+            }
+            //保存任务批次数据
+            batchInsertTaskResult(taskResults);
+            //发送短信
+            String result = messageService.sendMessage(String.join(",", resultList),msgContents);
+            if(!StringUtils.isEmpty(result)){
+                JSONObject jsonObject = JSONObject.parseObject(result);
+                if(jsonObject.getString("result").equals("1")){
+                    batchInsertSendMassageLog(sendMessageLogList);//保存发送短信日志
+                }
+            }
+        }
+//        logger.info("方法4 耗时：" + (System.currentTimeMillis() - start) + " 毫秒");
+        logger.info("{}号任务同步完成,耗时{}毫秒",taskId,(System.currentTimeMillis() - start));
+    }
+
+
+    private void batchInsertUserTag(List<String>  labels,Long taskId){
+        for(String label : labels){
+            TaskUserTag taskUserTag = new TaskUserTag();
+            taskUserTag.setCreateTime(new Date());
+            taskUserTag.setUpdateTime(new Date());
+            taskUserTag.setIsDelete(0);
+            taskUserTag.setUserTag(label);
+            taskUserTag.setTaskId(taskId);
+            taskUserTagMapper.insert(taskUserTag);
+        }
+    }
+
+
+
+
+    private void batchInsertSendMassageLog(List<SendMessageLog> sendMessageLogList){
+        SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH,false);
+        try{
+            long start = System.currentTimeMillis();
+            SendMessageLogMapper taskResultMapperNew = sqlSession.getMapper(SendMessageLogMapper.class);
+            sendMessageLogList.forEach(taskResultMapperNew::insert);
+            sqlSession.commit();
+            sqlSession.clearCache();
+            System.out.println(System.currentTimeMillis() - start);
+        }catch (Exception exception){
+            sqlSession.rollback();
+            exception.printStackTrace();
+        }finally {
+            sqlSession.close();
+        }
+    }
+
+    private void batchInsertTaskResult(List<TaskResult> taskResults){
+        SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH,false);
+        try{
+            long start = System.currentTimeMillis();
+            TaskResultMapper taskResultMapperNew = sqlSession.getMapper(TaskResultMapper.class);
+            taskResults.forEach(taskResultMapperNew::insert);
+            sqlSession.commit();
+            sqlSession.clearCache();
+            System.out.println(System.currentTimeMillis() - start);
+        }catch (Exception exception){
+            sqlSession.rollback();
+            exception.printStackTrace();
+        }finally {
+            sqlSession.close();
+        }
+    }
+
+    private SendMessageLog convertTOSendMessageLog(long taskId, Integer userId,String mobile,String content){
+        SendMessageLog sendMessageLog = new SendMessageLog();
+        sendMessageLog.setCreateTime(new Date());
+        sendMessageLog.setIsDelete(0);
+        sendMessageLog.setSendMobile(mobile);
+        sendMessageLog.setSendTime(new Date());
+        sendMessageLog.setSendUserId(Long.valueOf(userId));
+        sendMessageLog.setTaskId(taskId);
+        sendMessageLog.setSendContent(content);
+        return sendMessageLog;
+    }
+
+    private TaskResult convertTOTaskResult(long taskId, Integer userId, String userTag, BatchDetailInfoDto batchDetailInfoDto){
+        TaskResult taskResult = new TaskResult();
+        taskResult.setUserTag(userTag);
+        taskResult.setTaskId(taskId);
+        taskResult.setUserId(userId);
+        taskResult.setTaskId(taskId);
+        taskResult.setCallTime(batchDetailInfoDto.getCallTime());
+        taskResult.setRecordingUrl(batchDetailInfoDto.getWavUrl());
+        taskResult.setResult(batchDetailInfoDto.getReason());
+        taskResult.setCallDuration(batchDetailInfoDto.getElapsedTime());
+        taskResult.setNumberOfCall(batchDetailInfoDto.getCurrentCallTime());
+        return taskResult;
+//        taskResultMapper.insert(taskResult);
+    }
+
+
+    // 优化方法3，减少put次数
+    private static List<String> getDiffrent(List<String> list1, List<String> list2) {
+        List<String> diff = new ArrayList<>();
+        long start = System.currentTimeMillis();
+        Map<String, Integer> map = new HashMap<>(list1.size() + list2.size());
+        List<String> maxList = list1;
+        List<String> minList = list2;
+        if (list2.size() > list1.size()) {
+            maxList = list2;
+            minList = list1;
+        }
+        for (String string : maxList) {
+            map.put(string, 1);
+        }
+        for (String string : minList) {
+            Integer count = map.get(string);
+            if (count != null) {
+                map.put(string, ++count);
+                continue;
+            }
+            map.put(string, 1);
+        }
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            if (entry.getValue() == 1) {
+                diff.add(entry.getKey());
+            }
+        }
+        logger.info("方法4 耗时：" + (System.currentTimeMillis() - start) + " 毫秒");
+        return diff;
+
+    }
+
+    private Task convertTOTask(Task task, BatchInfoDto batch){
+        BeanUtils.copyProperties(batch,task,Task.class);
+        task.setIsDelete(0);
+        task.setTaskDate(batch.getBeginDate());
+        task.setName(batch.getBatchName());
+        task.setUpdateTime(new Date());
+        task.setCreateTime(new Date());
+        task.setStatus(0);
+        task.setBatchId(batch.getTaskId());
+        List<RegionInfo> regionInfos = regionInfoService.getListByName(batch.getBatchInfoDesc());
+        if(!CollectionUtils.isEmpty(regionInfos)){
+            task.setRegionId(regionInfos.get(0).getId());
+        }
+        return task;
+    }
+
+
+    public static void main(String[] args) {
+
+        String str = "桃源街道办";
+        String prefix = str.substring(0,str.length()-1);
+        System.out.println(prefix);
+    }
+
+
+
+}

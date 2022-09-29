@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.outbound.mapper.TaskInfoMapper">
+
+    <resultMap type="com.ruoyi.outbound.domain.TaskInfo" id="TaskInfoResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="content" column="content"/>
+        <result property="taskNo" column="task_no"/>
+        <result property="taskDate" column="task_date"/>
+        <result property="regionId" column="region_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="isDelete" column="is_delete"/>
+        <result property="resPhoneNum" column="res_phone_num"/>
+        <result property="resSubmitNum" column="res_submit_num"/>
+        <result property="retSuccNum" column="ret_succ_num"/>
+        <result property="retFailNum" column="ret_fail_num"/>
+        <result property="retOutDateNum" column="ret_out_date_num"/>
+        <result property="svcTime" column="svc_time"/>
+        <result property="batchId" column="batch_id"/>
+        <result property="status" column="status"/>
+        <result property="sendMsgStatus" column="send_msg_status"/>
+        <result property="tempNum" column="temp_num"/>
+    </resultMap>
+
+
+</mapper>

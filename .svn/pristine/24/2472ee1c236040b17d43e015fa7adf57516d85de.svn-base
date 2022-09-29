@@ -1,0 +1,14 @@
+package com.ruoyi.outbound.service;
+
+import com.ruoyi.outbound.entity.dto.BatchInfoDto;
+
+import java.util.List;
+
+public interface UserTagService {
+
+
+    void batchInsertUserTag(List<BatchInfoDto> labels, Long taskId);
+
+
+    Integer countByTaskId(long taskId);
+}

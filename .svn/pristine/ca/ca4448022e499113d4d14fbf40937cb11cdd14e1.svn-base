@@ -1,0 +1,143 @@
+package com.ruoyi.outbound.entity;
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+
+import java.util.Date;
+
+@TableName("task_result")
+public class TaskResult {
+
+    @TableId(value = "id", type = IdType.AUTO)
+    private Integer id;
+
+    private long taskId;
+
+    private Integer titleId;
+
+    private Integer answerId;
+
+    private String userTag;
+
+    private Integer userId;
+
+    private Date callTime;
+
+    private Date onTime;
+
+    private String recordingUrl;
+
+    private Integer numberOfCall;
+
+    private Long callDuration;
+
+    private String result;
+
+    private Date createTime;
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public long getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(long taskId) {
+        this.taskId = taskId;
+    }
+
+    public Integer getTitleId() {
+        return titleId;
+    }
+
+    public void setTitleId(Integer titleId) {
+        this.titleId = titleId;
+    }
+
+    public Integer getAnswerId() {
+        return answerId;
+    }
+
+    public void setAnswerId(Integer answerId) {
+        this.answerId = answerId;
+    }
+
+    public String getUserTag() {
+        return userTag;
+    }
+
+    public void setUserTag(String userTag) {
+        this.userTag = userTag;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public Date getCallTime() {
+        return callTime;
+    }
+
+    public void setCallTime(Date callTime) {
+        this.callTime = callTime;
+    }
+
+    public Date getOnTime() {
+        return onTime;
+    }
+
+    public void setOnTime(Date onTime) {
+        this.onTime = onTime;
+    }
+
+    public Integer getNumberOfCall() {
+        return numberOfCall;
+    }
+
+    public void setNumberOfCall(Integer numberOfCall) {
+        this.numberOfCall = numberOfCall;
+    }
+
+    public String getRecordingUrl() {
+        return recordingUrl;
+    }
+
+    public void setRecordingUrl(String recordingUrl) {
+        this.recordingUrl = recordingUrl;
+    }
+
+
+    public Long getCallDuration() {
+        return callDuration;
+    }
+
+    public void setCallDuration(Long callDuration) {
+        this.callDuration = callDuration;
+    }
+}

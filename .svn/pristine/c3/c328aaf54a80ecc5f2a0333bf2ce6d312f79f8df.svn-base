@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.outbound.mapper.ExportLabelsMapper">
+
+    <resultMap type="com.ruoyi.outbound.domain.ExportLabels" id="ExportLabelsResult">
+        <result property="id" column="id"/>
+        <result property="bizName" column="biz_name"/>
+        <result property="bizNo" column="biz_no"/>
+        <result property="obLabels" column="ob_labels"/>
+        <result property="obStatus" column="ob_status"/>
+        <result property="sheetName" column="sheet_name"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createTime" column="create_time"/>
+        <result property="isDelete" column="is_delete"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateBy" column="update_by"/>
+    </resultMap>
+
+
+</mapper>

@@ -1,0 +1,128 @@
+package com.ruoyi.outbound.entity.dto;
+
+import java.util.Date;
+
+public class BatchDetailInfoDto {
+
+    private String PhoneNo;
+
+    private String Province;
+
+    private String City;
+
+    private String Reason;
+
+    private String WavUrl;
+
+    private Date CallTime;
+
+    private Date BeginTime;
+
+    private Long ElapsedTime;
+
+    private Integer CurrentCallTime;
+
+    private String Label;
+
+    private Integer Status;
+
+    private String content;
+
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public Integer getStatus() {
+        return Status;
+    }
+
+    public void setStatus(Integer status) {
+        Status = status;
+    }
+
+    public String getLabel() {
+        return Label;
+    }
+
+    public void setLabel(String label) {
+        Label = label;
+    }
+
+    public Integer getCurrentCallTime() {
+        return CurrentCallTime;
+    }
+
+    public void setCurrentCallTime(Integer currentCallTime) {
+        CurrentCallTime = currentCallTime;
+    }
+
+    public String getPhoneNo() {
+        return PhoneNo;
+    }
+
+    public void setPhoneNo(String phoneNo) {
+        PhoneNo = phoneNo;
+    }
+
+    public String getProvince() {
+        return Province;
+    }
+
+    public void setProvince(String province) {
+        Province = province;
+    }
+
+    public String getCity() {
+        return City;
+    }
+
+    public void setCity(String city) {
+        City = city;
+    }
+
+    public String getReason() {
+        return Reason;
+    }
+
+    public void setReason(String reason) {
+        Reason = reason;
+    }
+
+    public String getWavUrl() {
+        return WavUrl;
+    }
+
+    public void setWavUrl(String wavUrl) {
+        WavUrl = wavUrl;
+    }
+
+    public Date getCallTime() {
+        return CallTime;
+    }
+
+    public void setCallTime(Date callTime) {
+        CallTime = callTime;
+    }
+
+    public Date getBeginTime() {
+        return BeginTime;
+    }
+
+    public void setBeginTime(Date beginTime) {
+        BeginTime = beginTime;
+    }
+
+    public Long getElapsedTime() {
+        return ElapsedTime;
+    }
+
+    public void setElapsedTime(Long elapsedTime) {
+        ElapsedTime = elapsedTime;
+    }
+}
+

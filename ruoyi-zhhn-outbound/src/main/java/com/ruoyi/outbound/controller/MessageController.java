@@ -1,0 +1,50 @@
+package com.ruoyi.outbound.controller;
+
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ruoyi.common.core.domain.PageQuery;
+import com.ruoyi.common.core.domain.R;
+import com.ruoyi.outbound.domain.vo.SendMessageLogVo;
+import com.ruoyi.outbound.entity.SendMessageLog;
+import com.ruoyi.outbound.service.ISendMessageLogService;
+import com.ruoyi.outbound.service.MessageService;
+import lombok.AllArgsConstructor;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+/**
+ * 短信控制器
+ */
+@Validated
+@AllArgsConstructor
+@RestController
+@RequestMapping("/message")
+public class MessageController {
+
+    private MessageService messageService;
+
+    private ISendMessageLogService sendMessageLogService;
+
+    /**
+     * 发送短信
+     * @param mobile
+     * @param content
+     * @return
+     */
+    @PostMapping("/send")
+    @ResponseBody
+    public R sendMessage(@RequestParam(value = "mobile") String mobile,
+                              @RequestParam(value = "content") String content) {
+        return R.ok(messageService.sendMessage(mobile,content,""));
+    }
+
+
+    /**
+     * 查询短信发送记录列表
+     * @param sendMessageLogVo
+     */
+    @GetMapping("/list")
+    public Page<SendMessageLog> list(SendMessageLogVo sendMessageLogVo, PageQuery pageQuery) {
+        return sendMessageLogService.selectSendMessageLogList(sendMessageLogVo, pageQuery);
+    }
+
+}

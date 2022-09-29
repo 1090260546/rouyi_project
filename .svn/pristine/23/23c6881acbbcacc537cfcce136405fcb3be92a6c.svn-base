@@ -1,0 +1,11 @@
+package com.ruoyi.outbound.entity;
+
+import com.baomidou.mybatisplus.annotation.TableName;
+
+/**
+ * @author rongbo
+ * @Date 2022-8-25
+ */
+@TableName("t_send_message")
+public class MessageBean {
+}

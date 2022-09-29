@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.outbound.mapper.BatchInfoMapper">
+
+  <select id="selectTaskInfoList" parameterType="String" resultType="com.ruoyi.outbound.entity.dto.BatchInfoDto">
+      SELECT   FROM
+          aisp_saas.marketbatchinfo t1
+              LEFT JOIN aisp_saas.markettaskinfo t2 ON t1.TaskId = t2.Id
+              left join aisp_saas.business t3 on t2.BusinessId = t3.Id
+      where t1.region_id
+      ORDER BY
+          t1.CreateTime DESC
+
+  </select>
+
+
+</mapper>

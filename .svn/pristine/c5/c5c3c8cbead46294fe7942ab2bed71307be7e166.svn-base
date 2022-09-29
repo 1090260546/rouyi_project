@@ -1,0 +1,125 @@
+package com.ruoyi.outbound.entity;
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import org.apache.ibatis.type.Alias;
+
+import java.util.Date;
+/**
+ * 短信发送记录对象 send_message_log
+ *
+ * @author ruoyi
+ * @date 2022-08-26
+ */
+@Alias("SendMessageLog")
+@TableName("send_message_log")
+public class SendMessageLog {
+    private static final long serialVersionUID = 1L;
+
+    /** 主键ID */
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
+
+    /** 任务ID */
+    private Long taskId;
+
+    /** 发送时间 */
+    private Date sendTime;
+
+    /** 发送内容 */
+    private String sendContent;
+
+    /** 发送手机号 */
+    private String sendMobile;
+
+    /** 发送用户Id */
+    private Long sendUserId;
+
+    /** 是否删除(0：否1：是) */
+    private Integer isDelete;
+
+    private Date createTime;
+
+    private Date updateTime;
+
+    public void setId(Long id)
+    {
+        this.id = id;
+    }
+
+    public Long getId()
+    {
+        return id;
+    }
+    public void setTaskId(Long taskId)
+    {
+        this.taskId = taskId;
+    }
+
+    public Long getTaskId()
+    {
+        return taskId;
+    }
+    public void setSendTime(Date sendTime)
+    {
+        this.sendTime = sendTime;
+    }
+
+    public Date getSendTime()
+    {
+        return sendTime;
+    }
+    public void setSendContent(String sendContent)
+    {
+        this.sendContent = sendContent;
+    }
+
+    public String getSendContent()
+    {
+        return sendContent;
+    }
+    public void setSendMobile(String sendMobile)
+    {
+        this.sendMobile = sendMobile;
+    }
+
+    public String getSendMobile()
+    {
+        return sendMobile;
+    }
+    public void setSendUserId(Long sendUserId)
+    {
+        this.sendUserId = sendUserId;
+    }
+
+    public Long getSendUserId()
+    {
+        return sendUserId;
+    }
+    public void setIsDelete(Integer isDelete)
+    {
+        this.isDelete = isDelete;
+    }
+
+    public Integer getIsDelete()
+    {
+        return isDelete;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+}

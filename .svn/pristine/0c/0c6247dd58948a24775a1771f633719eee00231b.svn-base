@@ -1,0 +1,48 @@
+package com.ruoyi.outbound.service;
+
+import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.core.domain.PageQuery;
+import com.ruoyi.outbound.domain.bo.ExportTemplateDetailBo;
+import com.ruoyi.outbound.domain.vo.ExportTemplateDetailVo;
+
+import java.util.Collection;
+import java.util.List;
+
+/**
+ * 【请填写功能名称】Service接口
+ *
+ * @author ruoyi
+ * @date 2022-09-19
+ */
+public interface IExportTemplateDetailService {
+
+    /**
+     * 查询【请填写功能名称】
+     */
+    ExportTemplateDetailVo queryById(Long id);
+
+    /**
+     * 查询【请填写功能名称】列表
+     */
+    TableDataInfo<ExportTemplateDetailVo> queryPageList(ExportTemplateDetailBo bo, PageQuery pageQuery);
+
+    /**
+     * 查询【请填写功能名称】列表
+     */
+    List<ExportTemplateDetailVo> queryList(ExportTemplateDetailBo bo);
+
+    /**
+     * 新增【请填写功能名称】
+     */
+    Boolean insertByBo(ExportTemplateDetailBo bo);
+
+    /**
+     * 修改【请填写功能名称】
+     */
+    Boolean updateByBo(ExportTemplateDetailBo bo);
+
+    /**
+     * 校验并批量删除【请填写功能名称】信息
+     */
+    Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid);
+}

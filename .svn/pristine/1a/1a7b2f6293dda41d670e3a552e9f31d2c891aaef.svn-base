@@ -1,0 +1,366 @@
+<template>
+  <div class="type_boxshaow">
+    <div class="type_list">
+      <h1>分析报告筛选逻辑</h1>
+      <div class="close_btn" @click="close_fc">
+        <i class="el-icon-close"></i>
+      </div>
+      <ul class="table_name_list">
+        <li
+          v-for="(item, i) in table_name_list"
+          :key="i"
+          @click="edit_btn(item)"
+        >
+          {{ item.sheetName }}
+        </li>
+        <button class="add_btn" @click="open_add">+ 新建子表格</button>
+      </ul>
+      <div class="type_boxshaow" v-show="show_add">
+        <div class="add_box">
+          <p>子表格名称</p>
+          <el-input
+            style="width: 300px"
+            v-model="table_name"
+            placeholder="子表格名称"
+          ></el-input>
+          <p>外呼结果</p>
+          <el-checkbox-group
+            v-model="wh_checked"
+            @change="handleCheckedwhChange"
+          >
+            <el-checkbox v-for="(val, i) in wh_sate" :label="val.id" :key="i">{{
+              val.name
+            }}</el-checkbox>
+          </el-checkbox-group>
+          <p>筛选标签(有值)</p>
+          <div class="checkbox_list">
+            <el-checkbox-group
+              v-model="checkedCities"
+              @change="handleCheckedCitiesChange"
+            >
+              <el-checkbox
+                v-for="(val, i) in cities"
+                :label="val.item"
+                :key="i"
+                >{{ val.value }}</el-checkbox
+              >
+            </el-checkbox-group>
+          </div>
+          <p>筛选标签(空值)</p>
+          <div class="checkbox_list">
+            <el-checkbox-group
+              v-model="checkedCitiesnull"
+              @change="handleCheckedCitiesChangeNull"
+            >
+              <el-checkbox
+                v-for="(val, i) in citiesnull"
+                :label="val.item"
+                :key="i"
+                >{{ val.value }}</el-checkbox
+              >
+            </el-checkbox-group>
+          </div>
+
+          <div class="btn_box">
+            <el-row>
+              <el-button type="primary" @click="add_btn">{{
+                btn_name
+              }}</el-button>
+              <el-button
+                v-show="btn_name == '修改'"
+                type="danger"
+                @click="delete_btn"
+                >删除</el-button
+              >
+              <el-button @click="close_add">取消</el-button>
+            </el-row>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template> 
+
+<script>
+import { getExportList } from "@/api/outbound/export";
+import {
+  addLabels,
+  listLabels,
+  updateLabels,
+  delLabels,
+} from "@/api/outbound/labels";
+export default {
+  data() {
+    return {
+      table_name_list: [], //子表格列表
+      table_name: "", //输入框子表格名称
+      wh_sate: [
+        {
+          id: "3",
+          name: "外呼成功",
+        },
+        {
+          id: "4",
+          name: "外呼失败",
+        },
+        {
+          id: "6",
+          name: "已被过滤",
+        },
+      ], //外呼状态列表
+      wh_checked: [], //选中外呼状态
+      wh_index: true, //标签选中状态
+      checkedCities: [], //标签选中
+      cities: [], //标签列表
+      isIndeterminate: true, //标签选中状态
+      checkedCitiesnull: [], //空值标签选中
+      citiesnull: [], //空值标签列表
+      isIndeterminatenull: true, //空值标签选中状态
+      show_add: false, //新建子表格控件
+      btn_name: "确认", //新增修改按钮名称
+      root_data: null, //机器人数据
+      title_id: "", //子表格id
+    };
+  },
+  methods: {
+    //重置
+    reset() {
+      this.wh_checked = []; //外呼状态
+      this.checkedCities = [];//有值标签
+      this.checkedCitiesnull = [];//空值标签
+      this.table_name = "";//子表格名称
+      this.title_id = "";//子表格id
+    },
+    //删除子表格
+    delete_btn() {
+      delLabels(this.title_id).then((res) => {
+        this.getlablelist();//获取子表格列表
+        this.close_add();//关闭新增子表格窗口
+        this.$message("删除成功");
+      });
+    },
+    //修改子表格逻辑
+    edit_btn(data) {
+      this.table_name = data.sheetName; //获取当前子表格名称
+      this.wh_checked = data.obStatus != null? data.obStatus.split(","):[]; //获取当前选中外呼状态标签
+      this.checkedCities = data.obLabels != null? data.obLabels.split(","): [];//获取当前选中有值标签
+      this.checkedCitiesnull = data.obLabelsNull != null? data.obLabelsNull.split(",") : [];//获取当前选中空值标签
+      this.title_id = data.id;
+      this.btn_name = "修改";
+      this.show_add = true;
+    },
+    //打开子表格窗口
+    open_add() {
+      this.btn_name = "确认";
+      this.show_add = true;
+    },
+    //关闭新增子表格窗口
+    close_add() {
+      this.show_add = false;
+      this.reset();
+    },
+    //选中筛选条件
+    handleCheckedCitiesChange(value) {
+      let checkedCount = value.length;
+      this.isIndeterminate =
+        checkedCount > 0 && checkedCount < this.cities.length;
+    },
+    //选中空值筛选条件
+    handleCheckedCitiesChangeNull() {
+      let checkedCount = value.length;
+      this.isIndeterminatenull =
+        checkedCount > 0 && checkedCount < this.citiesnull.length;
+    },
+    //选中外呼状态
+    handleCheckedwhChange(value) {
+      let checkedCount = value.length;
+      this.wh_index = checkedCount > 0 && checkedCount < this.cities.length;
+    },
+    //关闭窗口
+    close_fc() {
+      this.table_name_list = [];
+      this.$parent.open = false;
+    },
+    //添加子表格确认按钮
+    add_btn() {
+      if (!this.table_name) {
+        this.$message("子表格名称不能为空");
+        return false;
+      }
+      if (this.wh_checked.length == 0) {
+        this.$message("请选择外呼结果");
+        return false;
+      }
+      if (this.btn_name == "确认") {
+        let new_obj = {
+          bizName: this.root_data.bizName,
+          bizNo: this.root_data.bizNo,
+          obLabels: this.checkedCities.join(","),
+          obLabelsNull: this.checkedCitiesnull.join(","),
+          obStatus: this.wh_checked.join(","),
+          sheetName: this.table_name,
+          isDelete: 0,
+        };
+        addLabels(new_obj).then((res) => {
+          this.getlablelist();
+          this.$message("新建成功");
+        });
+      }
+      if (this.btn_name == "修改") {
+        let edit_obj = {
+          id: this.title_id,//子表格Id
+          bizName: this.root_data.bizName,//机器人名称
+          bizNo: this.root_data.bizNo,//机器人id
+          obLabels: this.checkedCities.join(","),//有值标签列表
+          obLabelsNull: this.checkedCitiesnull.join(","),//空值标签列表
+          obStatus: this.wh_checked.join(","),//外呼状态列表
+          sheetName: this.table_name,//子表格名称
+          isDelete: 0, //1删除 0取消
+        };
+        updateLabels(edit_obj).then((res) => {
+          this.getlablelist();
+          this.$message("修改成功");
+        });
+      }
+      this.close_add();
+    },
+    //获取子表格名称列表
+    getlablelist() {
+      listLabels(this.root_data.bizNo).then((res) => {
+        this.table_name_list = res.rows;
+      });
+    },
+    //获取标签列表
+    getExportlist(data) {
+      this.root_data = data;
+      this.getlablelist();
+      getExportList(this.root_data.bizNo).then((res) => {
+        this.cities = res.data;
+        this.citiesnull = res.data;
+      });
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+.type_boxshaow {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+  .type_list {
+    width: 1000px;
+    min-height: 400px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    h1 {
+      font-size: 18px;
+      color: #000;
+      line-height: 30px;
+    }
+    .close_btn {
+      width: 34px;
+      height: 34px;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      cursor: pointer;
+      i {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 34px;
+      }
+    }
+    .table_name_list {
+      width: 100%;
+      display: flex;
+      justify-content: left;
+      flex-wrap: wrap;
+      padding: 0;
+      li,
+      .add_btn {
+        min-width: 30px;
+        text-align: center;
+        padding: 0 10px;
+        height: 30px;
+        line-height: 30px;
+        font-size: 14px;
+        color: #333;
+        border: 1px solid #dcdfe6;
+        border-radius: 4px;
+        margin: 5px;
+        list-style: none;
+        background: none;
+        cursor: pointer;
+        input {
+          width: 100%;
+          height: 30px;
+          line-height: 30px;
+          text-align: center;
+          border: none;
+          background: none;
+          font-size: 14px;
+          color: #333;
+          outline: none;
+        }
+      }
+      .active {
+        background: #1890ff;
+        border: none;
+        color: #fff;
+      }
+      li:hover {
+        background: #eee;
+      }
+      .add_btn:hover {
+        background: #eee;
+      }
+    }
+    .block {
+      width: 100%;
+      display: flex;
+      justify-content: right;
+      margin-top: 10px;
+    }
+    .add_box {
+      width: 700px;
+      padding: 20px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translateX(-50%) translateY(-50%);
+      background: #fff;
+      border-radius: 8px;
+      border: 1px solid #dcdfe6;
+      p {
+        width: 100%;
+        height: 20px;
+        line-height: 20px;
+        font-size: 14px;
+        color: #000;
+      }
+      .checkbox_list {
+        width: 100%;
+      }
+      .btn_box {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+      }
+    }
+  }
+}
+</style>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.outbound.mapper.ObBusinessMapper">
+
+    <resultMap type="com.ruoyi.outbound.domain.ObBusiness" id="ObBusinessResult">
+        <result property="id" column="id"/>
+        <result property="bizNo" column="bizNo"/>
+        <result property="bizName" column="bizName"/>
+        <result property="desc" column="desc"/>
+        <result property="createUserId" column="createUserId"/>
+        <result property="createTime" column="createTime"/>
+        <result property="createUser" column="createUser"/>
+        <result property="statusDesc" column="statusDesc"/>
+    </resultMap>
+    <select id="selectRobotListPage" resultType="com.ruoyi.outbound.domain.vo.ObBusinessVo" parameterType="com.ruoyi.outbound.domain.bo.ObBusinessBo">
+        SELECT id, bizNo, bizName, t.desc, createUserId, createUser, statusDesc, createTime FROM aisp_saas.business t
+        <where>
+            <if test="obBusinessBo.bizName != null and obBusinessBo.bizName != ''"> and bizName like concat('%', #{obBusinessBo.bizName}, '%')</if>
+            <if test="obBusinessBo.params.beginTaskDate != null and obBusinessBo.params.beginTaskDate != ''">
+                and createTime between  STR_TO_DATE(#{obBusinessBo.params.beginTaskDate}, '%Y-%m-%d') and
+                STR_TO_DATE(#{obBusinessBo. params.endTaskDate}, '%Y-%m-%d')
+            </if>
+        </where>
+        order by t.createTime desc
+    </select>
+    <select id="selectRobotLabel" resultType="com.ruoyi.outbound.entity.Item" parameterType="Long">
+        SELECT
+            t.id,t.category,t.desc
+        FROM
+            aisp_jydp.configlabelcategory t
+                LEFT JOIN aisp_jydp.flowversion t2 ON t.VersionId = t2.Id
+                left JOIN aisp_jydp.robot t3 ON t2.robotId = t3.Id
+        where t3.Id = #{bizNo};
+    </select>
+
+</mapper>

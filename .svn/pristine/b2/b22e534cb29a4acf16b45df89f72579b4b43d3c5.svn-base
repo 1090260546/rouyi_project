@@ -1,0 +1,127 @@
+package com.ruoyi.outbound.service.impl;
+
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ruoyi.common.core.domain.PageQuery;
+import com.ruoyi.outbound.domain.vo.SendMessageLogVo;
+import com.ruoyi.outbound.entity.SendMessageLog;
+import com.ruoyi.outbound.mapper.SendMessageLogMapper;
+import com.ruoyi.outbound.service.ISendMessageLogService;
+import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.util.Date;
+import java.util.List;
+
+/**
+ * 短信发送记录Service业务层处理
+ *
+ * @author ruoyi
+ * @date 2022-08-26
+ */
+@Service
+public class SendMessageLogServiceImpl implements ISendMessageLogService
+{
+    @Autowired
+    private SendMessageLogMapper sendMessageLogMapper;
+
+
+    @Autowired
+    private SqlSessionFactory sqlSessionFactory;
+
+    /**
+     * 查询短信发送记录
+     *
+     * @param id 短信发送记录ID
+     * @return 短信发送记录
+     */
+    @Override
+    public SendMessageLog selectSendMessageLogById(Long id)
+    {
+        return sendMessageLogMapper.selectSendMessageLogById(id);
+    }
+
+    /**
+     * 查询短信发送记录列表
+     *
+     * @param sendMessageLogVo 短信发送记录
+     * @return 短信发送记录
+     */
+    @Override
+    public Page<SendMessageLog> selectSendMessageLogList(SendMessageLogVo sendMessageLogVo, PageQuery pageQuery)
+    {
+        Page<SendMessageLog> page = new Page<>(sendMessageLogVo.getPageIndex(),sendMessageLogVo.getPageSize());
+        return sendMessageLogMapper.selectSendMessageLogList(page, sendMessageLogVo);
+    }
+
+
+    /**
+     * 新增短信发送记录
+     *
+     * @param sendMessageLog 短信发送记录
+     * @return 结果
+     */
+    @Override
+    public int insertSendMessageLog(SendMessageLog sendMessageLog)
+    {
+        sendMessageLog.setCreateTime(new Date());
+        return sendMessageLogMapper.insertSendMessageLog(sendMessageLog);
+    }
+
+    /**
+     * 修改短信发送记录
+     *
+     * @param sendMessageLog 短信发送记录
+     * @return 结果
+     */
+    @Override
+    public int updateSendMessageLog(SendMessageLog sendMessageLog)
+    {
+        sendMessageLog.setUpdateTime(new Date());
+        return sendMessageLogMapper.updateSendMessageLog(sendMessageLog);
+    }
+
+    /**
+     * 删除短信发送记录对象
+     *
+     * @param ids 需要删除的数据ID
+     * @return 结果
+     */
+    @Override
+    public int deleteSendMessageLogByIds(String ids)
+    {
+        return 0;
+    }
+
+    /**
+     * 删除短信发送记录信息
+     *
+     * @param id 短信发送记录ID
+     * @return 结果
+     */
+    @Override
+    public int deleteSendMessageLogById(Long id)
+    {
+        return sendMessageLogMapper.deleteSendMessageLogById(id);
+    }
+
+
+
+    public void batchInsertSendMassageLog(List<SendMessageLog> sendMessageLogList){
+        SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH,false);
+        try{
+            long start = System.currentTimeMillis();
+            SendMessageLogMapper taskResultMapperNew = sqlSession.getMapper(SendMessageLogMapper.class);
+            sendMessageLogList.forEach(taskResultMapperNew::insert);
+            sqlSession.commit();
+            sqlSession.clearCache();
+            System.out.println(System.currentTimeMillis() - start);
+        }catch (Exception exception){
+            sqlSession.rollback();
+            exception.printStackTrace();
+        }finally {
+            sqlSession.close();
+        }
+    }
+}

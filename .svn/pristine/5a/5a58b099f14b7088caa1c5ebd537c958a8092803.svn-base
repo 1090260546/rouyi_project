@@ -1,0 +1,15 @@
+package com.ruoyi.outbound.mapper;
+
+import com.ruoyi.common.core.mapper.BaseMapperPlus;
+import com.ruoyi.outbound.domain.ExportTemplateDetail;
+import com.ruoyi.outbound.domain.vo.ExportTemplateDetailVo;
+
+/**
+ * 【请填写功能名称】Mapper接口
+ *
+ * @author ruoyi
+ * @date 2022-09-19
+ */
+public interface ExportTemplateDetailMapper extends BaseMapperPlus<ExportTemplateDetailMapper, ExportTemplateDetail, ExportTemplateDetailVo> {
+
+}

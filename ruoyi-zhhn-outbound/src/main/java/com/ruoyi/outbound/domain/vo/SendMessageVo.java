@@ -1,0 +1,77 @@
+package com.ruoyi.outbound.domain.vo;
+
+import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
+import com.alibaba.excel.annotation.ExcelProperty;
+import com.ruoyi.common.annotation.ExcelDictFormat;
+import com.ruoyi.common.convert.ExcelDictConvert;
+import lombok.Data;
+import java.util.Date;
+
+
+
+/**
+ * 短信发送记录视图对象 ob_send_message_log
+ *
+ * @author ruoyi
+ * @date 2022-09-05
+ */
+@Data
+@ExcelIgnoreUnannotated
+public class SendMessageVo {
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * 主键ID
+     */
+    @ExcelProperty(value = "主键ID")
+    private Long id;
+
+    /**
+     * 任务ID
+     */
+    @ExcelProperty(value = "任务ID")
+    private Long taskId;
+
+    /**
+     * 任务名称
+     */
+    @ExcelProperty(value = "任务名称")
+    private String taskName;
+
+    /**
+     * 发送时间
+     */
+    @ExcelProperty(value = "发送时间")
+    private Date sendTime;
+
+    /**
+     * 发送内容
+     */
+    @ExcelProperty(value = "发送内容")
+    private String sendContent;
+
+    /**
+     * 发送手机号
+     */
+    @ExcelProperty(value = "发送手机号")
+    private String sendMobile;
+
+    /**
+     * 发送用户Id
+     */
+    @ExcelProperty(value = "发送用户Id")
+    private Long sendUserId;
+
+    /**
+     * 批次号
+     */
+    @ExcelProperty(value = "批次号")
+    private String batchId;
+    @ExcelProperty(value = "发送结果")
+    private String result;
+
+
+}

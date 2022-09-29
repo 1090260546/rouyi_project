@@ -1,0 +1,11 @@
+package com.ruoyi.outbound.service;
+
+import com.ruoyi.outbound.entity.TaskResult;
+
+import java.util.List;
+
+public interface TaskResultService {
+
+
+    void batchInsertTaskResult(List<TaskResult> taskResults);
+}

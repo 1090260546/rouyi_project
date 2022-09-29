@@ -1,0 +1,9 @@
+package com.ruoyi.outbound.domain;
+
+/**
+ * @author rongbo
+ * @Date 2022-8-31
+ */
+public class TaskInfo {
+
+}

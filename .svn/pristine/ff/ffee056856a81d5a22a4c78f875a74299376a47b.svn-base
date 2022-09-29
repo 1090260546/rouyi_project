@@ -1,0 +1,15 @@
+package com.ruoyi.outbound.mapper;
+
+import com.ruoyi.outbound.domain.MsgTemplate;
+import com.ruoyi.outbound.domain.vo.MsgTemplateVo;
+import com.ruoyi.common.core.mapper.BaseMapperPlus;
+
+/**
+ * 短信发送模板Mapper接口
+ *
+ * @author ruoyi
+ * @date 2022-08-31
+ */
+public interface MsgTemplateMapper extends BaseMapperPlus<MsgTemplateMapper, MsgTemplate, MsgTemplateVo> {
+
+}

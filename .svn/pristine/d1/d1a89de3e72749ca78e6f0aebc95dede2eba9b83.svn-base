@@ -1,0 +1,20 @@
+package com.ruoyi.outbound.job;
+
+import com.xxl.job.core.handler.IJobHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+@Component
+public class DemoJobHandler extends IJobHandler {
+
+    private Logger logger = LoggerFactory.getLogger(DemoJobHandler.class);
+
+    @Override
+    public void execute() throws Exception {
+        logger.info("xxl-job Hello world");
+    }
+
+
+
+}

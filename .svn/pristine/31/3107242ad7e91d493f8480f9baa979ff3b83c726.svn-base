@@ -1,0 +1,43 @@
+package com.ruoyi.outbound.domain;
+
+import com.baomidou.mybatisplus.annotation.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import java.io.Serializable;
+import java.util.Date;
+import java.math.BigDecimal;
+
+import com.ruoyi.common.core.domain.BaseEntity;
+
+/**
+ * 导出模板对象 export_template
+ *
+ * @author ruoyi
+ * @date 2022-09-19
+ */
+@Data
+@EqualsAndHashCode(callSuper = true)
+@TableName("export_template")
+public class ExportTemplate extends BaseEntity {
+
+    private static final long serialVersionUID=1L;
+
+    /**
+     * 主键ID
+     */
+    @TableId(value = "id")
+    private Long id;
+    /**
+     * 模板名称
+     */
+    private String name;
+    /**
+     * 机器人ID
+     */
+    private Long bizNo;
+    /**
+     * 是否删除（1：是，0：否）
+     */
+    private Integer isDelete;
+
+}

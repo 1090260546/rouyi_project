@@ -1,0 +1,15 @@
+package com.ruoyi.outbound.mapper;
+
+import com.ruoyi.outbound.domain.TaskInfo;
+import com.ruoyi.outbound.domain.vo.TaskInfoVo;
+import com.ruoyi.common.core.mapper.BaseMapperPlus;
+
+/**
+ * 任务列Mapper接口
+ *
+ * @author ruoyi
+ * @date 2022-09-01
+ */
+public interface TaskInfoMapper extends BaseMapperPlus<TaskInfoMapper, TaskInfo, TaskInfoVo> {
+
+}

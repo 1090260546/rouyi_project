@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.outbound.mapper.MsgTemplateMapper">
+
+    <resultMap type="com.ruoyi.outbound.domain.MsgTemplate" id="MsgTemplateResult">
+        <result property="id" column="id"/>
+        <result property="tempName" column="temp_name"/>
+        <result property="tempContent" column="temp_content"/>
+        <result property="tempRegion" column="temp_region"/>
+        <result property="tempTaskid" column="temp_taskid"/>
+        <result property="tempLabel" column="temp_label"/>
+        <result property="tempType" column="temp_type"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="isDelete" column="is_delete"/>
+    </resultMap>
+
+
+</mapper>

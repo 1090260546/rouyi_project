@@ -1,0 +1,97 @@
+package com.ruoyi.outbound.domain;
+
+import com.baomidou.mybatisplus.annotation.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import java.io.Serializable;
+import java.util.Date;
+import java.math.BigDecimal;
+
+import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ruoyi.common.core.domain.BaseEntity;
+
+/**
+ * 任务列对象 ob_task
+ *
+ * @author ruoyi
+ * @date 2022-09-01
+ */
+@Data
+@EqualsAndHashCode(callSuper = true)
+@TableName("data_import.ob_task")
+public class TaskInfo extends BaseEntity {
+
+    private static final long serialVersionUID=1L;
+
+    /**
+     * 任务ID
+     */
+    @TableId(value = "id")
+    private Long id;
+    /**
+     * 任务名称
+     */
+    private String name;
+    /**
+     * 任务内容
+     */
+    private String content;
+    /**
+     * 任务编号
+     */
+    private String taskNo;
+    /**
+     * 任务日期
+     */
+    private Date taskDate;
+    /**
+     * 街道id
+     */
+    private Long regionId;
+    /**
+     * 是否删除（0否1是）
+     */
+    private Long isDelete;
+    /**
+     * 号码总量
+     */
+    private Long resPhoneNum;
+    /**
+     * 平台实际入库的号码量
+     */
+    private Long resSubmitNum;
+    /**
+     * 完成营销的量（指营销过程正常发起的量）
+     */
+    private Long retSuccNum;
+    /**
+     * 营销失败的量（指营销过程未能成功执行的数量）
+     */
+    private Long retFailNum;
+    /**
+     * 营销过期用户数
+     */
+    private Long retOutDateNum;
+    /**
+     * 服务时长（单位：s）
+     */
+    private Long svcTime;
+    /**
+     * 外呼平台批次id
+     */
+    private Long batchId;
+    /**
+     * 任务状态（0：未同步，1：同步中，2：已同步）
+     */
+    private Integer status;
+    /**
+     * 是否发送短信
+     */
+    private Integer sendMsgStatus;
+    /**
+     * 短信模板数
+     */
+    private Integer tempNum;
+
+}

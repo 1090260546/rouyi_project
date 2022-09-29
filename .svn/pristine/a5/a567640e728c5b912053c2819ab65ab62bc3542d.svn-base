@@ -1,0 +1,25 @@
+package com.ruoyi.outbound.mapper;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.ruoyi.outbound.entity.TaskResult;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
+
+@Mapper
+//@DS("master")
+public interface TaskResultMapper extends BaseMapper<TaskResult> {
+
+    @Select("SELECT\n" +
+            "            t2.phone\n" +
+            "        FROM\n" +
+            "            task_result t1 left join user t2 on t1.user_id = t2.id\n" +
+            "        where t1.task_id = #{taskId};")
+    List<String> selectPhoneNo(@Param("taskId")long taskId);
+
+    @Select("select count(1) from task_result where task_id = #{taskId}")
+    long countTaskResultByTaskId(@Param("taskId")long taskId);
+
+}

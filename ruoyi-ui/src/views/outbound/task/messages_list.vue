@@ -1,0 +1,122 @@
+<template>
+  <div class="messages_shadow">
+    <div class="messages_list">
+      <h1>短信列表</h1>
+      <div class="close_btn" @click="close_fc">
+        <i class="el-icon-close"></i>
+      </div>
+      <el-table :data="msg_list" style="width: 100%">
+        <el-table-column prop="sendMobile" label="号码"> </el-table-column>
+        <el-table-column prop="sendContent" label="短信内容"> </el-table-column>
+        <el-table-column prop="sendTime" label="发送时间"> </el-table-column>
+      </el-table>
+      <div class="pagination_box">
+        <el-pagination
+          background
+          @current-change="handleCurrentChange"
+          :current-page="currentPage4"
+          :page-size="page_size"
+          layout="total, prev, pager, next"
+          :total="total"
+        >
+        </el-pagination>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { getmessageslist } from "@/api/outbound/task";
+export default {
+  data() {
+    return {
+      tableData: [],
+      currentPage4: 1,
+      page_size: 5,
+      msg_list: [],
+      total: 0,
+      msg_data: {},
+      cheack_pass: true,
+    };
+  },
+  methods: {
+    close_fc() {
+      this.$parent.show_msg_list = false;
+    },
+    handleCurrentChange(val) {
+      if (this.cheack_pass) {
+        this.cheack_pass = false;
+        this.currentPage4 = val;
+        getmessageslist(this.msg_data, this.currentPage4, this.page_size).then(
+          (res) => {
+            this.msg_list = res.records;
+            this.total = res.total;
+            this.cheack_pass = true;
+          }
+        );
+      }
+    },
+    get_messageslist(row) {
+      this.cheack_pass = false;
+      this.msg_data = row;
+      getmessageslist(this.msg_data, this.currentPage4, this.page_size).then(
+        (res) => {
+          this.msg_list = res.records;
+          this.total = res.total;
+          this.cheack_pass = true;
+        }
+      );
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+.messages_shadow {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+  .messages_list {
+    width: 1000px;
+    min-height: 700px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    h1 {
+      font-size: 18px;
+      color: #000;
+      line-height: 30px;
+    }
+    .pagination_box {
+      width: 100%;
+      display: flex;
+      justify-content: right;
+      margin: 20px 0;
+    }
+    .close_btn {
+      width: 34px;
+      height: 34px;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      cursor: pointer;
+      i {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 34px;
+      }
+    }
+  }
+}
+</style>

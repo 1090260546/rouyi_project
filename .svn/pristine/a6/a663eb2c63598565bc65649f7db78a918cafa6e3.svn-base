@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.outbound.mapper.MsgTemplateMapper">
+
+    <resultMap type="com.ruoyi.outbound.domain.MsgTemplate" id="MsgTemplateResult">
+        <result property="id" column="id"/>
+        <result property="tempName" column="temp_name"/>
+        <result property="tempContent" column="temp_content"/>
+        <result property="tempRegion" column="temp_region"/>
+        <result property="tempTaskid" column="temp_taskid"/>
+        <result property="tempLabel" column="temp_label"/>
+        <result property="tempType" column="temp_type"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="isDelete" column="is_delete"/>
+    </resultMap>
+
+    <select id="selectTempListPage" parameterType="com.ruoyi.outbound.domain.bo.MsgTemplateBo"
+            resultType="com.ruoyi.outbound.domain.vo.MsgTemplateVo">
+        select t.id,t.temp_name,t.temp_label,t.temp_content,t.temp_region,t.temp_type,t.temp_taskid,t.create_time,tt.name temp_task_name
+        from ob_message_template t
+        LEFT JOIN  data_import.ob_task tt on t.temp_taskid = tt.id
+        <where>
+            <if test="msgTemplateBo.tempName != null and msgTemplateBo.tempName != ''"> and temp_name like concat('%', #{msgTemplateBo.tempName}, '%')</if>
+            <if test="msgTemplateBo.tempContent != null and msgTemplateBo.tempContent != ''"> and temp_content like concat('%', #{msgTemplateBo.tempContent}, '%')</if>
+            <if test="msgTemplateBo.tempRegion != null and msgTemplateBo.tempRegion != ''"> and temp_region = #{msgTemplateBo.tempRegion}</if>
+            <if test="msgTemplateBo.tempType != null and msgTemplateBo.tempType != ''"> and temp_type = #{msgTemplateBo.tempType}</if>
+        </where>
+        order by t.create_time desc
+    </select>
+
+    <select id="selectTaskInfoList" parameterType="Integer" resultType="com.ruoyi.outbound.entity.Item">
+        select id,biz_no item,name value from data_import.ob_task
+        <where>
+            <if test="regionId != null"> and region_id = #{regionId}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="getMsgTemplateList" resultType="com.ruoyi.outbound.domain.MsgTemplate">
+        select * from ob_message_template where 1=1
+        <if test="regionId != null and regionId != '' and taskId == null and label == null">
+            and temp_region = #{regionId} and temp_taskid is null and temp_label is null
+        </if>
+        <if test="taskId != null and taskId != '' and regionId == null and label == null">
+            and temp_taskid = #{taskId} and temp_label is null
+        </if>
+        <if test="label != null and label != '' and regionId != null and taskId != null ">
+            and temp_label = #{label}  and temp_region = #{regionId} and temp_taskid = #{taskId}
+        </if>
+        order by create_time
+    </select>
+
+
+</mapper>

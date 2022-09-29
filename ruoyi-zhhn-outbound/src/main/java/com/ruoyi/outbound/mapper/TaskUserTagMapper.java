@@ -1,0 +1,15 @@
+package com.ruoyi.outbound.mapper;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.ruoyi.outbound.entity.TaskUserTag;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+
+@Mapper
+public interface TaskUserTagMapper extends BaseMapper<TaskUserTag> {
+
+
+    @Select("select count(1) from data_import.ob_task_user_tag where task_id = #{taskId}")
+    Integer countByTaskId(long taskId);
+
+}

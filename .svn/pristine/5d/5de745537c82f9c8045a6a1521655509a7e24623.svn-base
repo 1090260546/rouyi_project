@@ -1,0 +1,52 @@
+package com.ruoyi.outbound.domain.vo;
+
+import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
+import com.alibaba.excel.annotation.ExcelProperty;
+import com.ruoyi.common.annotation.ExcelDictFormat;
+import com.ruoyi.common.convert.ExcelDictConvert;
+import lombok.Data;
+import java.util.Date;
+
+
+
+/**
+ * 导出模板视图对象 export_template
+ *
+ * @author ruoyi
+ * @date 2022-09-19
+ */
+@Data
+@ExcelIgnoreUnannotated
+public class ExportTemplateVo {
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * 主键ID
+     */
+    @ExcelProperty(value = "主键ID")
+    private Long id;
+
+    /**
+     * 模板名称
+     */
+    @ExcelProperty(value = "模板名称")
+    private String name;
+
+    /**
+     * 机器人ID
+     */
+    @ExcelProperty(value = "机器人ID")
+    private Long bizNo;
+
+    /**
+     * 是否删除（1：是，0：否）
+     */
+    @ExcelProperty(value = "是否删除", converter = ExcelDictConvert.class)
+    @ExcelDictFormat(readConverterExp = "1=：是，0：否")
+    private Integer isDelete;
+
+
+
+
+}

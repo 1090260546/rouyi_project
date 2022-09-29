@@ -1,0 +1,112 @@
+package com.ruoyi.outbound.controller;
+
+import java.util.List;
+import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
+
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ruoyi.outbound.controller.vo.SendMessageLogVo;
+import lombok.RequiredArgsConstructor;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.*;
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.annotation.Validated;
+import com.ruoyi.common.annotation.RepeatSubmit;
+import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.PageQuery;
+import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.validate.AddGroup;
+import com.ruoyi.common.core.validate.EditGroup;
+import com.ruoyi.common.core.validate.QueryGroup;
+import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.outbound.domain.vo.MsgTemplateVo;
+import com.ruoyi.outbound.domain.bo.MsgTemplateBo;
+import com.ruoyi.outbound.service.IMsgTemplateService;
+import com.ruoyi.common.core.page.TableDataInfo;
+
+/**
+ * 短信发送模板
+ *
+ * @author ruoyi
+ * @date 2022-08-31
+ */
+@Validated
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/outbound/messageTemplate")
+public class MsgTemplateController extends BaseController {
+
+    private final IMsgTemplateService iMsgTemplateService;
+
+    /**
+     * 查询短信发送模板列表
+     */
+    @SaCheckPermission("outbound:messageTemplate:list")
+    @GetMapping("/list")
+    public TableDataInfo<MsgTemplateVo> list(MsgTemplateBo bo, PageQuery pageQuery) {
+        return iMsgTemplateService.queryPageList(bo, pageQuery);
+    }
+
+    /**
+     * 导出短信发送模板列表
+     */
+    @SaCheckPermission("outbound:messageTemplate:export")
+    @Log(title = "短信发送模板", businessType = BusinessType.EXPORT)
+    @PostMapping("/export")
+    public void export(MsgTemplateBo bo, HttpServletResponse response) {
+        List<MsgTemplateVo> list = iMsgTemplateService.queryList(bo);
+        ExcelUtil.exportExcel(list, "短信发送模板", MsgTemplateVo.class, response);
+    }
+
+    /**
+     * 获取短信发送模板详细信息
+     *
+     * @param id 主键
+     */
+    @SaCheckPermission("outbound:messageTemplate:query")
+    @GetMapping("/{id}")
+    public R<MsgTemplateVo> getInfo(@NotNull(message = "主键不能为空")
+                                     @PathVariable Long id) {
+        return R.ok(iMsgTemplateService.queryById(id));
+    }
+
+    /**
+     * 新增短信发送模板
+     */
+    @SaCheckPermission("outbound:messageTemplate:add")
+    @Log(title = "短信发送模板", businessType = BusinessType.INSERT)
+    @RepeatSubmit()
+    @PostMapping()
+    public R<Void> add(@Validated(AddGroup.class) @RequestBody MsgTemplateBo bo) {
+        return toAjax(iMsgTemplateService.insertByBo(bo) ? 1 : 0);
+    }
+
+    /**
+     * 修改短信发送模板
+     */
+    @SaCheckPermission("outbound:messageTemplate:edit")
+    @Log(title = "短信发送模板", businessType = BusinessType.UPDATE)
+    @RepeatSubmit()
+    @PutMapping()
+    public R<Void> edit(@Validated(EditGroup.class) @RequestBody MsgTemplateBo bo) {
+        return toAjax(iMsgTemplateService.updateByBo(bo) ? 1 : 0);
+    }
+
+    /**
+     * 删除短信发送模板
+     *
+     * @param ids 主键串
+     */
+    @SaCheckPermission("outbound:messageTemplate:remove")
+    @Log(title = "短信发送模板", businessType = BusinessType.DELETE)
+    @DeleteMapping("/{ids}")
+    public R<Void> remove(@NotEmpty(message = "主键不能为空")
+                          @PathVariable Long[] ids) {
+        return toAjax(iMsgTemplateService.deleteWithValidByIds(Arrays.asList(ids), true) ? 1 : 0);
+    }
+
+
+}

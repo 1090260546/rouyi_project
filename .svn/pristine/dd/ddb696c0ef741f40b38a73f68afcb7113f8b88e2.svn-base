@@ -1,0 +1,163 @@
+package com.ruoyi.outbound.service.impl;
+
+import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.core.domain.PageQuery;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.ruoyi.outbound.entity.Item;
+import com.ruoyi.outbound.entity.Task;
+import com.ruoyi.outbound.entity.TaskUserTag;
+import com.ruoyi.outbound.mapper.TaskMapper;
+import com.ruoyi.outbound.mapper.TaskUserTagMapper;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections.ArrayStack;
+import org.apache.groovy.util.Maps;
+import org.springframework.stereotype.Service;
+import com.ruoyi.outbound.domain.bo.MsgTemplateBo;
+import com.ruoyi.outbound.domain.vo.MsgTemplateVo;
+import com.ruoyi.outbound.domain.MsgTemplate;
+import com.ruoyi.outbound.mapper.MsgTemplateMapper;
+import com.ruoyi.outbound.service.IMsgTemplateService;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+/**
+ * 短信发送模板Service业务层处理
+ *
+ * @author ruoyi
+ * @date 2022-08-31
+ */
+@RequiredArgsConstructor
+@Service
+public class MsgTemplateServiceImpl extends ServiceImpl<MsgTemplateMapper,MsgTemplate> implements IMsgTemplateService {
+
+    private final MsgTemplateMapper baseMapper;
+
+    private final TaskMapper taskMapper;
+
+    private final TaskUserTagMapper userTagService;
+    /**
+     * 查询短信发送模板
+     */
+    @Override
+    public MsgTemplateVo queryById(Long id){
+        return baseMapper.selectVoById(id);
+    }
+
+    /**
+     * 查询短信发送模板列表
+     */
+    @Override
+    public TableDataInfo<MsgTemplateVo> queryPageList(MsgTemplateBo bo, PageQuery pageQuery) {
+        LambdaQueryWrapper<MsgTemplate> lqw = buildQueryWrapper(bo);
+        //Page<MsgTemplateVo> result = baseMapper.selectVoPage(pageQuery.build(), lqw);
+        Page<MsgTemplateVo> result = baseMapper.selectTempListPage(new Page<>(pageQuery.getPageNum(), pageQuery.getPageSize()), bo);
+        if(result.getRecords().size()>0){
+            List<MsgTemplateVo> tempList = result.getRecords();
+            for (int i = 0; i < tempList.size(); i++) {
+                MsgTemplateVo t = tempList.get(i);
+                if(StringUtils.isNotBlank(t.getTempLabel())){
+                    //翻译label项
+                    String[] tempLabel = t.getTempLabel().split(",");
+                    QueryWrapper wrapper = new QueryWrapper();
+                    wrapper.eq("task_id", t.getTempTaskid());
+                    wrapper.in("id", Arrays.asList(tempLabel));
+                    List<TaskUserTag> list = userTagService.selectList(wrapper);
+                    String items = list.stream().map(TaskUserTag::getUserTag).collect(Collectors.joining(","));
+                    t.setTempLabelName(items);
+                }
+            }
+        }
+        return TableDataInfo.build(result);
+    }
+
+    /**
+     * 查询短信发送模板列表
+     */
+    @Override
+    public List<MsgTemplateVo> queryList(MsgTemplateBo bo) {
+        LambdaQueryWrapper<MsgTemplate> lqw = buildQueryWrapper(bo);
+        return baseMapper.selectVoList(lqw);
+    }
+
+    private LambdaQueryWrapper<MsgTemplate> buildQueryWrapper(MsgTemplateBo bo) {
+        Map<String, Object> params = bo.getParams();
+        LambdaQueryWrapper<MsgTemplate> lqw = Wrappers.lambdaQuery();
+        lqw.like(StringUtils.isNotBlank(bo.getTempName()), MsgTemplate::getTempName, bo.getTempName());
+        lqw.like(StringUtils.isNotBlank(bo.getTempContent()), MsgTemplate::getTempContent, bo.getTempContent());
+        lqw.eq(bo.getTempRegion()!=null, MsgTemplate::getTempRegion, bo.getTempRegion());
+        lqw.eq(bo.getTempTaskid()!=null, MsgTemplate::getTempTaskid, bo.getTempTaskid());
+        lqw.like(bo.getTempLabel() != null, MsgTemplate::getTempLabel, bo.getTempLabel());
+        lqw.eq(bo.getTempType() != null, MsgTemplate::getTempType, bo.getTempType());
+        return lqw;
+    }
+
+    /**
+     * 新增短信发送模板
+     */
+    @Override
+    public Boolean insertByBo(MsgTemplateBo bo) {
+        MsgTemplate add = BeanUtil.toBean(bo, MsgTemplate.class);
+        validEntityBeforeSave(add);
+        boolean flag = baseMapper.insert(add) > 0;
+        if (flag) {
+            bo.setId(add.getId());
+        }
+        return flag;
+    }
+
+    /**
+     * 修改短信发送模板
+     */
+    @Override
+    public Boolean updateByBo(MsgTemplateBo bo) {
+        MsgTemplate update = BeanUtil.toBean(bo, MsgTemplate.class);
+        validEntityBeforeSave(update);
+        return baseMapper.updateById(update) > 0;
+    }
+
+    /**
+     * 保存前的数据校验
+     */
+    private void validEntityBeforeSave(MsgTemplate entity){
+        //TODO 做一些数据校验,如唯一约束
+    }
+
+    /**
+     * 批量删除短信发送模板
+     */
+    @Override
+    public Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid) {
+        if(isValid){
+            //TODO 做一些业务上的校验,判断是否需要校验
+        }
+        return baseMapper.deleteBatchIds(ids) > 0;
+    }
+
+    @Override
+    public List<Item> selectTaskInfoList(int regionId) {
+        return baseMapper.selectTaskInfoList(regionId);
+    }
+
+
+    @Override
+    public List<Item> selectTaskLabel(int taskId) {
+        HashMap<String, Object> maps  = new HashMap<String, Object>(){{
+            put("task_id", taskId);
+        }};
+        List<TaskUserTag> tags = userTagService.selectByMap(maps);
+        List<Item> list = tags.stream().map(res -> new Item(res.getId().longValue(), res.getCategory(),res.getUserTag())).collect(Collectors.toList());
+        return list.stream().distinct().collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MsgTemplate> getMsgTemplateList(Integer regionId, Long tempTaskId, String label) {
+        return baseMapper.getMsgTemplateList(regionId,tempTaskId,label);
+    }
+}

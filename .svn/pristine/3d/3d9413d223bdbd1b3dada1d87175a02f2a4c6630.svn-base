@@ -1,0 +1,24 @@
+package com.ruoyi.outbound.mapper;
+
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ruoyi.outbound.domain.ObBusiness;
+import com.ruoyi.outbound.domain.bo.ObBusinessBo;
+import com.ruoyi.outbound.domain.vo.ObBusinessVo;
+import com.ruoyi.common.core.mapper.BaseMapperPlus;
+import com.ruoyi.outbound.entity.Item;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+
+/**
+ * 机器人信息Mapper接口
+ *
+ * @author ruoyi
+ * @date 2022-09-21
+ */
+public interface ObBusinessMapper extends BaseMapperPlus<ObBusinessMapper, ObBusiness, ObBusinessVo> {
+
+    Page<ObBusinessVo> selectRobotListPage(@Param("page") Page<ObBusinessBo> page, @Param("obBusinessBo") ObBusinessBo obBusinessBo);
+
+    List<Item> selectRobotLabel(@Param("bizNo") Long bizNo);
+}
